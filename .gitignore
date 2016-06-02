@@ -1,0 +1,5 @@
+# No auto save file from Emacs
+*~
+
+# No compiled files
+*.pyc
