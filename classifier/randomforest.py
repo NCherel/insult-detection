@@ -65,7 +65,7 @@ class RandomForestClassifier():
             y_pred[:,i] = estimator.predict(X_estimator)
 
         # In the end we will average each line to get the result
-        print y_pred
+        #print y_pred
         y_pred = average(y_pred)
 
         return y_pred
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     y = y[n]
     X = X[n]
     
-    print X.shape
+    # print X.shape
     
     X_train = X[:500]
     y_train = y[:500]
@@ -106,4 +106,4 @@ if __name__ == "__main__":
     X_test = X[500:]
     y_test = y[500:]
     y_pred = rf.predict(X_test)
-    print 1.0*np.sum(y_test.reshape(-1,1) == y_pred.reshape(-1,1))/len(X_test)
+    print(1.0*np.sum(y_test.reshape(-1,1) == y_pred.reshape(-1,1))/len(X_test))

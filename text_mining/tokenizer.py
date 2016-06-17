@@ -1,30 +1,56 @@
-# coding: utf-8
-
+# -*- coding: utf-8 -*-
 """
-The tokenizer is responsible for transforming the text into an array of string
+Created on Fri Jun 17 16:06:54 2016
 
-Authors : Mohamed, Hugo, Nicolas
-
+@author: mohamedmf
 """
 
+import re
+from collections import namedtuple
 
-def tokenize(document, removePunctuation=False):
-    """ Tokenize an array of text using space delimitors
+class Tokenizer:
 
-    The function takes an numpy array of text and returns
-    a numpy array of numpy arrays
-    
-    Note : maybe it is easier to return a sparse matrice with the number of
-    occurences of every word for every text
-    Numpy doesn't really support multi-dimensional arrays of arbitrary length
-    See : http://stackoverflow.com/questions/3386259/how-to-make-a-multidimension-numpy-array-with-a-varying-row-size
-    
-    Different parameters can be set :
+  Token = namedtuple('Token', 'name text span')
 
-    removePunctuation=False
-    """
+  def __init__(self, tokens):
+    self.tokens = tokens
+    pat_list = []
+    for tok, pat in self.tokens:
+      pat_list.append('(?P<%s>%s)' % (tok, pat))
+    self.regex = re.compile('|'.join(pat_list)) 
+    ## regular expression from patterns given by tokens : '|' = OU logique
 
-    # Just take the last example
-    # http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html
+  def iter_tokens(self, input, ignore_ws=True):
+    for match in self.regex.finditer(input): # Problem here
+      if ignore_ws and match.lastgroup == 'WHITESPACE':
+        continue
+      yield Tokenizer.Token(match.lastgroup, match.group(0), match.span(0))
 
-    pass
+  def tokenize(self, input, ignore_ws=True):
+    tokenized_text = []
+    for token in self.iter_tokens(input, ignore_ws):
+        tokenized_text.append(token.text)
+    return tokenized_text
+
+# test program
+if __name__ == "__main__":
+
+# A mettre à jour en fonction des token que l'on risque de trouver
+  TOKENS = [
+    ('NIL'        , r"nil|\'()"),
+    ('TRUE'       , r'true|#t'),
+    ('FALSE'      , r'false|#f'),
+    ('NUMBER'     , r'\d+'),
+    ('STRING'     , r'"(\\.|[^"])*"'),
+    ('SYMBOL'     , r'[\x21-\x26\x2a-\x7e]+'),
+    ('QUOTE'      , r"'"),
+    ('LPAREN'     , r'\('),
+    ('RPAREN'     , r'\)'),
+    ('DOT'        , r'\.'),
+    ('WHITESPACE' , r'\w+'),
+  ]
+
+  myTokenizer = Tokenizer(TOKENS)
+  print(myTokenizer.tokenize('Bonjour!!, je m\'appelle Mohamed !'))
+  print(myTokenizer.tokenize('Ceci est un test du Tokeni zer :) : )'))
+  

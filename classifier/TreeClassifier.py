@@ -222,10 +222,10 @@ if __name__ == "__main__":
     from numpy.random import shuffle
     y = np.array([1,1,1,1,2,2,2,3,3,3])
     # entropy should be equal to 1.5709
-    print impurity(y, criterion="entropy")
+#    print impurity(y, criterion="entropy")
 
     a = np.array([1,1,1,3,3,3,3])
-    print vote(a)
+ #   print vote(a)
 
     data = load_digits()
     
@@ -237,7 +237,7 @@ if __name__ == "__main__":
     y = y[n]
     X = X[n]
     
-    print X.shape
+  #  print X.shape
     
     X_train = X[:500]
     y_train = y[:500]
@@ -247,4 +247,4 @@ if __name__ == "__main__":
     X_test = X[500:]
     y_test = y[500:]
     y_pred = t.predict(X_test)
-    print 1.0*np.sum(y_test.reshape(-1,1) == y_pred.reshape(-1,1))/len(X_test)
+   # print 1.0*np.sum(y_test.reshape(-1,1) == y_pred.reshape(-1,1))/len(X_test)
