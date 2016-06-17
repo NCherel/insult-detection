@@ -126,8 +126,19 @@ def best_features(X, y, epsilon):
     for i in range(0,X.shape[1]):
         A[i] = dichotomie(i,X,y,epsilon)
     
-    print A
+    #print A
     idx = np.argmin(A[:,1])
+    lidx, ridx = split(X, idx, A[idx][0])
+    
+    while np.sum(lidx) == 0 or np.sum(ridx) == 0:
+        A = np.delete(A, idx, 0)
+        
+        if len(A) == 0:
+            return -1, np.inf
+        
+        idx = np.argmin(A[:,1])
+        lidx, ridx = split(X, idx, A[idx][0])
+        
     return idx, A[idx][0]
 
 class Node():
@@ -150,10 +161,17 @@ class Node():
         # If the node is not a leaf
         # Compute the best feature and the best threshold
         self.feature, self.threshold = best_features(X, y, 0.1)
+        
+        # Can't cut right, this must be a leaf
+        if self.feature == -1:
+            self.leaf = True
+            self.value = vote(y)
+            return
+        
         lidx, ridx = split(X, self.feature, self.threshold)
         
-        print "Feature number : ", self.feature
-        print "Feature threshold : ", self.threshold
+        # print "Feature number : ", self.feature
+        # print "Feature threshold : ", self.threshold
         
     
         self.leftNode = Node(depth + 1, X[lidx], y[lidx])
