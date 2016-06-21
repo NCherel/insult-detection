@@ -101,6 +101,8 @@ if __name__ == "__main__":
   tokens = myTokenizer.tokenize_array(t)
   dictionary = myTokenizer.create_dict(tokens)
   dictionary = list(dictionary)
+  print('\n ##### Print dictiionary #####')
   print(dictionary)
+  print('\n ##### Print occurences #####')
   print(myTokenizer.count_occurences(tokens, dictionary))
   #print(dictionary)
