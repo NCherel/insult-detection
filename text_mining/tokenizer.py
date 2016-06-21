@@ -31,6 +31,22 @@ class Tokenizer:
     for token in self.iter_tokens(input, ignore_ws):
         tokenized_text.append(token.text)
     return tokenized_text
+    
+  def tokenize_array(self, input, ignore_ws=True):
+     tokenized_text = []
+     for text in input:
+         tokenized_text.append(self.tokenize(text))
+    
+     return tokenized_text
+     
+  def create_dict(self, tokens):
+      dictionary = set()
+      
+      for words in tokens:
+          for word in words:
+              dictionary.add(word)
+              
+      return dictionary
 
 # test program
 if __name__ == "__main__":
@@ -54,3 +70,11 @@ if __name__ == "__main__":
   print(myTokenizer.tokenize('Bonjour!!, je m\'appelle Mohamed !'))
   print(myTokenizer.tokenize('Ceci est un test du Tokeni zer :) : )'))
   
+  s1 = 'Bonjour!!, je m\'appelle Mohamed Mohamed !'
+  s2 = 'Ceci est un test du Tokeni zer :) : )'
+  t = [s1, s2]
+  print(myTokenizer.tokenize_array(t))
+  
+  tokens = myTokenizer.tokenize_array(t)
+  dictionary = myTokenizer.create_dict(tokens)
+  print(dictionary)

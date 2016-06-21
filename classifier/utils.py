@@ -5,7 +5,7 @@ Hugo, Nicolas, Mohammed
 Utils
 """
 import numpy as np
-def cross_val_score(estimator,X,y,cv=5):
+def cross_val_score(estimator, X, y, cv=5):
     size_fold = X.shape[0]//cv
     data = np.c_[X,y]
     a = 0
