@@ -8,8 +8,6 @@ import numpy as np
 def cross_val_score(estimator,X,y,cv=5):
     size_fold = X.shape[0]//cv
     data = np.c_[X,y]
-    samples_X = []
-    samples_Y = []
     a = 0
     b = size_fold
     np.random.shuffle(data)
