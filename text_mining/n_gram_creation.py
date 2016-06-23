@@ -19,7 +19,7 @@ def size_n_gram_matrix(X,n):
 # cette fontion retourne une matrice de n_gram ou on assigne la valeur nan
 # pour les n_grams n'existant pas
 def compute_ngrams(X,n):
-    Result_mat = np.empty((X.shape[0],size_n_gram_matrix(X,n),n),dtype='a5')
+    Result_mat = np.empty((X.shape[0],size_n_gram_matrix(X,n),n),dtype='a100')
     for i in range(0,X.shape[0]):
         words = X[i].split()
         print(np.array(create_n_grams(words,n)))
