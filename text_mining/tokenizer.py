@@ -81,6 +81,7 @@ class Tokenizer:
       
   def reconstruct(self, tokens):
       return " ".join(self.stem(tokens))
+
           
 #### CREATE DICTIONARY #####
       
@@ -122,8 +123,11 @@ if __name__ == "__main__":
   s3 = " you are a shitty piece of shit !!!!! BITCH BITCHES CUNT CUNTS"
   #s2 = 'Hello World!!'
   t = [s1, s2, s3]
-  #print("### Tokenize Array ###")
+  print("### Tokenize String ###")
   #print(myTokenizer.tokenize_array(t))
+  tokens1 = myTokenizer.tokenize('Bonjour!!??, je m\'appelle Mohamed !')
+  print(tokens1)
+  print(myTokenizer.reconstruct(tokens1))
 
   #print(myTokenizer.create_dict(myTokenizer.tokenize_array(t)))
   #print(re.sub(r"(!+)" , r" \1 ", s1))
