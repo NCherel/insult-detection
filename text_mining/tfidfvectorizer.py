@@ -24,12 +24,9 @@ class TfidfVectorizer():
         """
         result = np.ndarray(X.shape)
         X = X.todense()
-        idf = np.squeeze(self.idf(X))
-        print(idf.shape)
-        idf = np.squeeze(idf, axis=0)
-        print(idf.shape)
-        for j in range(idf.shape[1]):
-            result[:,j] = X[:,j] * idf[j]
+        n_samples = X.shape[0]
+        idf = self.idf(X)
+        result = np.multiply(X, idf)
      
         return result
     
@@ -39,5 +36,4 @@ class TfidfVectorizer():
         
         # No to sparse matrix        
         n_t = np.sum(X > 0, axis=0)
-        
         return np.log(n_samples/n_t)

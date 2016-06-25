@@ -57,7 +57,8 @@ def vectorize_n_grams(X, n):
 def create_n_grams(input_list, n):
     n_gram_set = set()
     for i in range(len(input_list) - n + 1):
-        n_gram_set.add("".join([input_list[i+j] for j in range(n)]))
+        for n_i in range(1, n + 1):
+            n_gram_set.add("".join([input_list[i+j] for j in range(n_i)]))
     return n_gram_set
     
 if __name__ == '__main__':

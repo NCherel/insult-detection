@@ -1,5 +1,5 @@
 # No auto save file from Emacs
 *~
-
+.DS_Store
 # No compiled files
 *.pyc
