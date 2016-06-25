@@ -54,6 +54,7 @@ class Tokenizer:
     
     for token in self.tokens:
         tokenized_text = re.sub(token[1], token[2], tokenized_text)
+
     
     return tokenized_text.split(" ")
 
