@@ -95,7 +95,8 @@ def vote(y):
     
     counts = np.array(counts)
     return classes[np.argmax(counts)]
-    
+
+
 def dichotomie(id_features,X,y,epsilon):
     b = np.max(X[::,id_features])
     a = np.min(X[::,id_features])
@@ -120,12 +121,29 @@ def dichotomie(id_features,X,y,epsilon):
         return 0, np.inf
         
     return tho, split_loss(X, y, id_features, tho)
+
+
+def best_split(id_features, X, y):
+    n_samples, n_features = X.shape
+    tho = X[:, id_features].min()
+    best_loss = np.inf
     
-def best_features(X, y, epsilon):
+    for i in range(n_samples):
+        loss = split_loss(X, y, id_features, X[i, id_features])
+        
+        if loss < best_loss:
+            best_loss = loss
+            tho = X[i, id_features]
+
+    return tho, split_loss(X, y, id_features, tho)
+
+def best_features(X, y, epsilon, method="dicho"):
     A = np.empty((X.shape[1],2))
     for i in range(0,X.shape[1]):
-        A[i] = dichotomie(i,X,y,epsilon)
-    
+        if method == "dicho":
+            A[i] = dichotomie(i,X,y,epsilon)
+        elif method == "best":
+            A[i] = best_split(i, X, y)
     #print A
     idx = np.argmin(A[:,1])
     lidx, ridx = split(X, idx, A[idx][0])

@@ -7,14 +7,15 @@ Authors : Mohamed, Hugo, Nicolas
 
 """
 import numpy as np
-import scipy.sparse
+from scipy import sparse
+
 
 class TfidfVectorizer():
     """ Transform a count matrice to a tf-idf matrice
 
     TODO : add different weighting scheme (binary, log)
     """
-    
+
     def __init__(self):
         """ Constructor, sets the parameters """
         pass
@@ -22,18 +23,12 @@ class TfidfVectorizer():
     def transform(self, X):
         """ Return the tf-idf matrice taking count sparse matrice as X
         """
-        result = np.ndarray(X.shape)
-        X = X.todense()
-        n_samples = X.shape[0]
-        idf = self.idf(X)
-        result = np.multiply(X, idf)
-     
+        idf = sparse.csr_matrix(self.idf(X))
+        result = X.tocsr().multiply(idf)
         return result
-    
+
     def idf(self, X):
         n_samples, n_terms = X.shape
-        n_t = np.array(n_terms)
-        
-        # No to sparse matrix        
-        n_t = np.sum(X > 0, axis=0)
+        # WARNING : non sparse operation
+        n_t = np.diff(X.tocsc().indptr).astype(float)
         return np.log(n_samples/n_t)

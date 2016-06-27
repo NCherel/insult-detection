@@ -82,6 +82,10 @@ class RandomForestClassifier():
         # TODO : add different modes to select the features
         return features
         
+    def score(self, X, y):
+        n_samples, _ = X.shape
+        return np.sum(self.predict(X) == y)/float(n_samples)
+        
         
 if __name__ == "__main__":
     from numpy.random import shuffle
@@ -105,5 +109,5 @@ if __name__ == "__main__":
     
     X_test = X[500:]
     y_test = y[500:]
-    y_pred = rf.predict(X_test)
-    print(1.0*np.sum(y_test.reshape(-1,1) == y_pred.reshape(-1,1))/len(X_test))
+    print rf.score(X_test, y_test)
+    
