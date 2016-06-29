@@ -111,7 +111,7 @@ class LogisticRegression():
         self.label = np.unique(y)
         w_init = np.zeros(X.shape[1])
         w_init0 = 0
-        w = np.append(w_init,w_init0)
+        w = np.append(w_init0,w_init)
         if self.solver == 'Newton':
             if self.penalty == 'i2':
                 self.coef = newton(w,X,y,self.tol)
@@ -127,7 +127,7 @@ class LogisticRegression():
     def predict(self,X):
         y_pred = []
         for i in range(0,X.shape[0]):
-            h_X = np.dot(X[i],np.transpose(self.coef[0:X.shape[1]])) + self.coef[X.shape[1]]
+            h_X = np.dot(X[i],np.transpose(self.coef[1::])) + self.coef[0]
             if h_X > 0:
                 y_pred.append(self.label[1])
             else:
