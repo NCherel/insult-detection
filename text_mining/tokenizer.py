@@ -14,25 +14,40 @@ from nltk.stem.porter import PorterStemmer
 from nltk.stem.snowball import EnglishStemmer
 from nltk.corpus import stopwords
 
-# Tokens Globaux
+# To Keep updated
 TOKENS = [
+    ### Replacements first ###
+    ('BREAK'        , r"\\n", r" "),
+    ('SLASH'           , r"\/+", r" "),
+    ('WHITE_SPACE'     , r"(\\\\xc2|\\\\xa0|\\xa0|\\xa1|\\xa3|\\xa9|\\r|\\ufeff|\\u2013|\\u2016|\\u200f|\\u2665|\\U0001f308|\\U0001f3e9|\\U0001f48b|\\\\|\\|&nbsp|&amp|=|\"\"|\"|\\u2018|\\u2019)", r" "),
+    ('LETTER_A'        , r"(\\xe1|\\xe3|\\xe0|\\xc2|\\u1ef1|\\u0105|\\u1eb7|\\xe5|\\xe4)", r"a"),
+    ('LETTER_E'        , r"(\\xe9|\\xe8|\\u1ec3|\\u1ec5|\\u1ebf|\\u0119)", r"e"),
+    ('LETTER_I'        , r"(\\xed)", r"i"),
+    ('LETTER_O'        , r"(\\x00|\\xf8|\\xf6|\\xf3)", r"o"),
+    ('LETTER_U'        , r"(\\xfa|\\xdc|\\xfc|\\u1ee9|\\u0169)", r"u"),
+    ('LETTER_Y'        , r"(\\xfd)", r"u"),
+    ('LETTER_C'        , r"(\\xe7|\\u0107)", r"c"),
+    ('LETTER_Z'        , r"(\\u017a|\\u017e|\\u017c)", r"z"),
+    ('PONCT_!'        , r"(\\u203d)", r"!"),
+    ### Tokens ###
+    ('NOT'             , r"n\'t", r" not "),
     ('PUNCT'      , r"(!+|\?+|\.+)", r" \1 "),
     ('NIL'          , r"\'|,", r" "),
-    ('SMILEY'       , r"(\:\w+\:|\<[\/\\]?3|[\(\)\\\D|\*\$][\-\^]?[\:\;\=]|[\:\;\=B8][\-\^]?[3DOPp\@\$\*\\\)\(\/\|])(?=\s|[\!\.\?]|$)|xD|XD", r" \1 "),
-    ('PUNCT'      , r"(;+|\,+|\)+|\(+)", r" \1 "),
-    ('BREAK'        , r"\\n", r" \1 "),
-#    ('NOISE'        , r"("\\\\xc2|\\\\xa0|\\xa0|\\xa1|\\xa3|\\xa9"), r" \1 "),
-    ('QUOTE'      , r"(\"|\')+(\w+)(\"|\')+", "QUOTE"), # A améliorer pour mettre la citation entre deux <QUOTE>
+    ('SMILEY'       , r"(\:\w+\:|\<[\/\\]?3|[\(\)\\\D|\*\$][\-\^]?[\:\;\=]|[\:\;\=B8][\-\^]?[3DOPp\@\$\*\\\)\(\/\|])(?=\s|[\!\.\?]|$)|xD|XD", r" smiley "),
+    ('PUNCT'      , r"(;+|\,+|\)+|\(+)|\-|\_", r" "),
+    ('ALONE'        , r"\s[a-hj-zA-HJ-Z]\s", r" "), # delete all lone letters except I&i
+    ('DOTS'         , r"\.+", r" "),
+#    ('QUOTE'      , r"(\"|\')+(\w+)(\"|\')+", "QUOTE"), # A améliorer pour mettre la citation entre deux <QUOTE>
     ('BEGIN_WHITESPACE' , r"^\s+", r""),
     ('END_WHITESPACE' , r"\s+$", r""),
-    ('WHITESPACES' , r"\s+", r" "),
-  ]
+    ('WHITESPACES' , r"\s+", r" ")
+]
 
 class Tokenizer:
 
   Token = namedtuple('Token', 'name text span')
 
-  def __init__(self, tokens):
+  def __init__(self, tokens=TOKENS):
     self.tokens = tokens
     self.stemmer = EnglishStemmer(ignore_stopwords=True)
     ## regular expression from patterns given by tokens : '|' = OU logique

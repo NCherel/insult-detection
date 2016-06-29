@@ -28,20 +28,21 @@ def compute_ngrams(X, n):
         Result_mat[i,len(create_n_grams(words,n))::] = np.nan
     return Result_mat
     
-def vectorize_n_grams(X, n):
+def vectorize_n_grams_no_dict(X, n):
     # Creation de l'ensemble des n_grams dans tous les exemples
     global_set = set()
     for sentence in X:
         global_set =  global_set | create_n_grams(sentence, n)
-    
+
     # On compte l'occurence de chaque n_gram
     global_array = np.array(list(global_set))
     n_samples = X.shape[0]
     n_ngrams = global_array.shape[0]
-    
+
     i_array = []
     j_array = []
     data = []
+
     for i, sentence in enumerate(X):
         for j, n_gram in enumerate(global_array):
             counter = sentence.count(n_gram)
@@ -49,10 +50,30 @@ def vectorize_n_grams(X, n):
                 i_array.append(i)
                 j_array.append(j)
                 data.append(counter)
-    
+
     count_vectorize = scipy.sparse.coo_matrix((data, (i_array, j_array)), shape=(n_samples, n_ngrams))
     return count_vectorize, global_array
-    
+
+def vectorize_n_grams_with_dict(X, dictionary):
+    # On compte l'occurence de chaque n_gram
+    n_samples = X.shape[0]
+    n_ngrams = dictionary.shape[0]
+
+    i_array = []
+    j_array = []
+    data = []
+
+    for i, sentence in enumerate(X):
+        for j, n_gram in enumerate(dictionary):
+            counter = sentence.count(n_gram)
+            if counter != 0:
+                i_array.append(i)
+                j_array.append(j)
+                data.append(counter)
+
+    count_vectorize = scipy.sparse.coo_matrix((data, (i_array, j_array)), shape=(n_samples, n_ngrams))
+    return count_vectorize, dictionary
+
 # cette fonction calcule les n_grams pour une liste de mots donnés
 def create_n_grams(input_list, n):
     n_gram_set = set()
@@ -60,16 +81,16 @@ def create_n_grams(input_list, n):
         for n_i in range(1, n + 1):
             n_gram_set.add("".join([input_list[i+j] for j in range(n_i)]))
     return n_gram_set
-    
+
 if __name__ == '__main__':
-    s1 = "Je vais enculer"
-    s2 = "Est ce que tu suces Porta ?"
-    s3 = "Je vais voir ce que je peux faire"
+    s1 = "Je vais "
+    s2 = "Je vais manger"
+    s3 = "Je vais vais manger"
     X = np.array([s1, s2, s3])
-    
+
     mat = vectorize_n_grams(X, 4)[0]
     
     from tfidfvectorizer import TfidfVectorizer
     tf = TfidfVectorizer()
     
-    print(tf.transform(mat))
+    tf.transform(mat)

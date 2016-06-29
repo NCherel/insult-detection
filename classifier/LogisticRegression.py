@@ -4,9 +4,9 @@ Created on Sun Jun 26 19:54:50 2016
 
 @author: Hugo, Nicolas, Mohammed
 """
-
-import numpy as np
 from __future__ import division
+import numpy as np
+
 # définition du gradient, de la hessienne et de la fonction pour la pénalisation 2
 def line_search(w,X,y, a, b, beta):
     l = 1
@@ -53,7 +53,8 @@ def hessienne_f(w,X,y):
     eye[0,0] = 0
     
     temp = np.exp(-y*(X1.dot(w)))
-    U = np.eye(n) * (y**2 * temp)/((1+temp)**2)
+    U = np.diag(y**2 * temp/((1+temp)**2))
+    print U.shape
     
     return 1.0/n*((X1.T.dot(U).dot(X1))) + eye
 
@@ -124,20 +125,15 @@ class LogisticRegression():
                 print("Error of penalisation for the solver")
 
     def predict(self,X):
-        y_pred = np.empty((X.shape[0]))
+        y_pred = []
         for i in range(0,X.shape[0]):
             h_X = np.dot(X[i],np.transpose(self.coef[0:X.shape[1]])) + self.coef[X.shape[1]]
             if h_X > 0:
-                y_pred[i] = self.label[1]
+                y_pred.append(self.label[1])
             else:
-                y_pred[i] = self.label[0]
-        return y_pred
+                y_pred.append(self.label[0])
+        return np.array(y_pred)
     
     def score(self,X,y):
-        y_pred = self.predict(X)
-        score = 0
-        for i in range(0,X.shape[0]):
-            if y_pred[i] == y[i]:
-                score = score + 1
-        score = score / X.shape[0]
-        return score
+        n_samples, _ = X.shape
+        return np.sum(self.predict(X) == y)/float(n_samples)
