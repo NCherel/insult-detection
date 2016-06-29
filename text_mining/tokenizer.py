@@ -43,6 +43,40 @@ TOKENS = [
     ('WHITESPACES' , r"\s+", r" ")
 ]
 
+
+# Ca déconne
+INSULTS = [
+    ### Insults Replacment ###
+    ('FUCK'    , r"f(.ck|u.k|uc.)(i?ng*)?", r" fuck "),# fuck/fucking style
+    ('FUCK_2'    , r"fuck((\s)?you|.?er)+", r" fuck you "),#fuck you + fuck your XXXer
+    ('FUCK_3'    , r"(\w?-)fucker", r" mother fuck "),# compouned fuck # mother fuck plutot ?
+    # Replace above regex "mother fuck" by "you fuck" since personal insult ?
+    ('ASSHOLE',  r"a.{1,3}oles?", r" asshole "),# ass hole and its versions
+    ('STALK',  r"stalk(in*g*|ers?)?", r" stalk "),
+    ('STUPID',  r"(\$|s)tupi?d", r" stupid "),
+    ('SHIT',  r"sh(itty|it)", r" shit "),
+    ('NIGGA',  r" nigg | negro ", r" nigga "),
+    ('BEGIN_WHITESPACE' , r"^\s+", r""),
+    ('END_WHITESPACE' , r"\s+$", r""),
+    ('WHITESPACES' , r"\s+", r" ")
+    
+    ]
+
+RANDOM = [
+    ### Random Replacement ###
+    ('LAUGH',  r"\b(?:a*(?:ha)+h?|(?:l+o+)+l+)\b", r" laugh "), # matches laughs such as "hahaha" or "lolll"
+    ('PSEUDO',  r"@\s?\w+", r" pseudo "),
+    ('DOLLAR',  r"[0-9]+k?\s?\$+", r" dollar "),
+    ('DATE',  r"[0-9]+th(\s?of)?(\s\w+)?", r" date "),# eg : 18th or "18th of Month"
+    ('YEAR',  r"[0-9]{4}?", r" year "),
+    ('NUMBER',  r"[0-9]{1,}", r" number "),
+    ('LOVE',  r"<3", r" love "),
+    ('URL',  r"(http:)?(\/\/)?((www\.)?\w+\.\w+)\/?(\w+.\w+)?", r" url "),
+    ('BEGIN_WHITESPACE' , r"^\s+", r""),
+    ('END_WHITESPACE' , r"\s+$", r""),
+    ('WHITESPACES' , r"\s+", r" ")
+]
+
 class Tokenizer:
 
   Token = namedtuple('Token', 'name text span')
@@ -64,7 +98,7 @@ class Tokenizer:
         tokenized_text.append(token.text)
     return tokenized_text
 
-  def tokenize(self, input, ignore_ws=True):
+  def tokenize(self, input, tokens=TOKENS, ignore_ws=True):
     tokenized_text = input
     
     for token in self.tokens:
@@ -76,7 +110,9 @@ class Tokenizer:
   def tokenize_array(self, input, ignore_ws=True):
      tokenized_text = []
      for text in input:
-         tokenized_text.append(self.tokenize(text))
+         text_t = self.tokenize(text, tokens=TOKENS)
+         text_t = self.tokenize(text_t, tokens=RANDOM)
+         text_t = self.tokenize(text_t, tokens=INSULTS)
 
      return tokenized_text
      
@@ -97,6 +133,12 @@ class Tokenizer:
       
   def reconstruct(self, tokens):
       return " ".join(self.stem(tokens))
+      
+  def reconstruct_array(self, tokens_array):
+      array = []
+      for tokens in tokens_array:
+          array.append(self.reconstruct(tokens))
+      return np.array(array)
 
           
 #### CREATE DICTIONARY #####
