@@ -53,12 +53,10 @@ def hessienne_f(w,X,y):
     eye[0,0] = 0
     
     temp = np.exp(-y*(X1.dot(w)))
-    U = np.diag(y**2 * temp/((1+temp)**2))
-    print U.shape
-    
+    U = np.diag(y**2 * temp/((1+temp)**2)) 
     return 1.0/n*((X1.T.dot(U).dot(X1))) + eye
 
-def newton(x0,X,y, epsilon=10e-10):
+def newton(x0, X, y, gamma=1, epsilon=10e-10, k=30):
     xk = x0
     grad = grad_f(xk,X,y)
     norm = np.sum(grad**2)
@@ -67,7 +65,7 @@ def newton(x0,X,y, epsilon=10e-10):
     grads = []
     grads.append(norm)
     
-    while norm > epsilon:
+    for i in range(k):
         xk = xk - np.linalg.inv(hessienne).dot(grad)
         grad = grad_f(xk,X,y)
         norm = np.sum(grad**2)
@@ -96,6 +94,26 @@ def newton_line_search(x0,X,y, epsilon=10e-10):
         grads.append(norm)
         print(norm)
     return xk
+    
+def descente_gradient(x0, X, y, use_line_search=True, kmax=1000):
+    xk = x0
+    gamma = 1
+    n,p = X.shape
+    ones = np.ones((n,1))
+    X1 = np.hstack([X,ones])
+    
+    for k in range(kmax):
+        #if use_line_search:
+        #    gamma = line_search(xk, X, y, 0.5, 2*gamma, 0.5)
+        xk = xk - gamma*grad_f(xk, X, y)
+        
+        if k % 100 == 0:
+            print f(xk, X, y)
+            print np.sum(grad_f(xk, X, y)**2)
+
+            print np.max(X1.dot(xk))
+            print np.min(X1.dot(xk))
+    return xk
 
 
 
@@ -107,11 +125,15 @@ class LogisticRegression():
         self.tol = tol
         self.C = C
     
-    def fit(self,X,y):
+    def fit(self,X,y,resume=False, x0=None):
         self.label = np.unique(y)
         w_init = np.zeros(X.shape[1])
         w_init0 = 0
-        w = np.append(w_init,w_init0)
+        w = np.append(w_init0,w_init)
+        
+        if resume:
+            w = x0
+
         if self.solver == 'Newton':
             if self.penalty == 'i2':
                 self.coef = newton(w,X,y,self.tol)
@@ -123,15 +145,16 @@ class LogisticRegression():
                 self.coef = newton_line_search(w,X,y,self.tol)
             else:
                 print("Error of penalisation for the solver")
+                
+        if self.solver == 'Gradient':
+            self.coef = descente_gradient(w, X, y)
 
     def predict(self,X):
         y_pred = []
-        for i in range(0,X.shape[0]):
-            h_X = np.dot(X[i],np.transpose(self.coef[0:X.shape[1]])) + self.coef[X.shape[1]]
-            if h_X > 0:
-                y_pred.append(self.label[1])
-            else:
-                y_pred.append(self.label[0])
+        n,p = X.shape
+        ones = np.ones((n,1))
+        X1 = np.hstack([X,ones])
+        y_pred = 2*(X1.dot(self.coef) > 0) - 1
         return np.array(y_pred)
     
     def score(self,X,y):
