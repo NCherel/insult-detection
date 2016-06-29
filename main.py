@@ -58,6 +58,6 @@ print X_train.shape
 
 logreg = LogisticRegression2()
 logreg.fit(X_train, y_train)
-y_pred = logreg.predict(X_test)
+y_pred = logreg.predict(X_tf_test)
 np.savetxt('y_pred.txt', y_pred, fmt='%s')
 
