@@ -7,12 +7,14 @@ Authors : Mohamed, Hugo, Nicolas
 """
 import numpy as np
 import pandas as pd
+#from sklearn.linear_model import LogisticRegression
 from text_mining.tokenizer import Tokenizer
 from text_mining.n_gram_creation import vectorize_n_grams_no_dict
 from text_mining.n_gram_creation import vectorize_n_grams_with_dict
 from text_mining.tfidfvectorizer import TfidfVectorizer
 
-#from classifier.randomforest import RandomForestClassifier
+from classifier.randomforest import RandomForestClassifier
+from classifier.LogisticRegression2 import LogisticRegression2
 from classifier.LogisticRegression import LogisticRegression
 
 data = pd.read_csv('data/train.csv', header=None)
@@ -53,6 +55,7 @@ y_test = 2*y[2000:] - 1
 
 print X_train.shape
 x0 = np.load('coef.npy')
+
 
 logreg = LogisticRegression(solver='Newton')
 logreg.fit(X_train, y_train, resume=False, x0=x0)

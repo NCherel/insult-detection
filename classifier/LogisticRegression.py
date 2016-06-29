@@ -133,7 +133,6 @@ class LogisticRegression():
         
         if resume:
             w = x0
-
         if self.solver == 'Newton':
             if self.penalty == 'i2':
                 self.coef = newton(w,X,y,self.tol)
