@@ -98,7 +98,7 @@ def vectorize_n_grams_with_dict(X, dictionary):
                 data.append(counter)
 
     count_vectorize = scipy.sparse.coo_matrix((data, (i_array, j_array)), shape=(n_samples, n_ngrams))
-    return count_vectorize, dictionary
+    return count_vectorize
 
 # cette fonction calcule les n_grams pour une liste de mots donnés
 def create_n_grams_char(input_list, n):
