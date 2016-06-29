@@ -8,7 +8,7 @@ Created on Wed Jun 29 16:56:42 2016
 import numpy as np
 class LogisticRegression2:
  
-    def __init__(self):
+    def __init__(self,C=0.001):
         """Initializes Class for Logistic Regression
  
         Parameters
@@ -24,6 +24,7 @@ class LogisticRegression2:
  
         """
         #create weights equal to zero with an intercept coefficent at index 0
+        self.C = C
         self.tableau_vraissemblance = []
  
     def prob(self):
@@ -52,9 +53,10 @@ class LogisticRegression2:
         erreur = self.labels-self.prob()
         grad = erreur*self.features
         gradient = grad.sum(axis=0)
-        return gradient.reshape(self.w.shape)
+        result = gradient.reshape(self.w.shape) + self.C*self.w
+        return result
  
-    def log_vraissemblance_gradient_descente(self,alpha=1e-6,max_iter=1e4):
+    def log_vraissemblance_gradient_descente(self,alpha=1e-6,max_iter=1e3):
         """Runs the gradient decent algorithm
  
         Parameters
