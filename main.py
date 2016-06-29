@@ -55,7 +55,7 @@ print X_train.shape
 x0 = np.load('coef.npy')
 
 logreg = LogisticRegression(solver='Newton')
-logreg.fit(X_train, y_train, resume=True, x0=x0)
+logreg.fit(X_train, y_train, resume=False, x0=x0)
 print logreg.score(X_test, y_test)
 
 np.save('coef.npy',logreg.coef)

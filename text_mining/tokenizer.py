@@ -98,21 +98,17 @@ class Tokenizer:
         tokenized_text.append(token.text)
     return tokenized_text
 
-  def tokenize(self, input, tokens=TOKENS, ignore_ws=True):
+  def tokenize(self, input, ignore_ws=True):
     tokenized_text = input
-    
-    for token in self.tokens:
-        tokenized_text = re.sub(token[1], token[2], tokenized_text)
-
-    
+    for tokens in [TOKENS, RANDOM, INSULTS]:
+        for token in tokens:
+            tokenized_text = re.sub(token[1], token[2], tokenized_text)
     return tokenized_text.split(" ")
 
   def tokenize_array(self, input, ignore_ws=True):
      tokenized_text = []
      for text in input:
-         text_t = self.tokenize(text, tokens=TOKENS)
-         text_t = self.tokenize(text_t, tokens=RANDOM)
-         text_t = self.tokenize(text_t, tokens=INSULTS)
+         tokenized_text.append(self.tokenize(text))
 
      return tokenized_text
      

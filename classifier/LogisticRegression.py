@@ -56,7 +56,7 @@ def hessienne_f(w,X,y):
     U = np.diag(y**2 * temp/((1+temp)**2)) 
     return 1.0/n*((X1.T.dot(U).dot(X1))) + eye
 
-def newton(x0, X, y, gamma=1, epsilon=10e-10, k=30):
+def newton(x0, X, y, gamma=1, epsilon=10e-10, k=5):
     xk = x0
     grad = grad_f(xk,X,y)
     norm = np.sum(grad**2)
