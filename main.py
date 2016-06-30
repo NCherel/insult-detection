@@ -33,7 +33,7 @@ X_reconstruct = tokenizer.reconstruct_array(X_tokens)
 X_reconstruct_test = tokenizer.reconstruct_array(X_test_tokens)
 
 
-n_grams, dictionary = vectorize_n_grams_no_dict(X_reconstruct, 3, method='char')
+n_grams, dictionary = vectorize_n_grams_no_dict(X_reconstruct, 6, method='char')
 n_grams_test = vectorize_n_grams_with_dict(X_reconstruct_test, dictionary)
 
 
@@ -59,5 +59,7 @@ print X_train.shape
 logreg = LogisticRegression2()
 logreg.fit(X_train, y_train)
 y_pred = logreg.predict(X_tf_test)
+y_submit = y_pred.astype(int)
+np.savetxt('y_submit.txt',y_submit, fmt='%i')
 np.savetxt('y_pred.txt', y_pred, fmt='%s')
 
