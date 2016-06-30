@@ -9,21 +9,7 @@ import numpy as np
 class LogisticRegression2:
  
     def __init__(self,C=0.001):
-        """Initializes Class for Logistic Regression
- 
-        Parameters
-        ----------
-        X : ndarray(n-rows,m-features)
-            Numerical training data.
- 
-        y: ndarray(n-rows,)
-            Interger training labels.
- 
-        tolerance : float (default 1e-5)
-            Stopping threshold difference in the loglikelihood between iterations.
- 
-        """
-        #create weights equal to zero with an intercept coefficent at index 0
+        
         self.C = C
         self.tableau_vraissemblance = []
  
@@ -48,7 +34,7 @@ class LogisticRegression2:
         return -1*Lv.sum()
  
     def log_vraissemblance_gradient(self):
-        """On calcule la formule du gradient de 
+        """On calcule la formule du gradient
         """
         erreur = self.labels-self.prob()
         grad = erreur*self.features
