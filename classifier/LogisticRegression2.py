@@ -57,17 +57,7 @@ class LogisticRegression2:
         return result
  
     def log_vraissemblance_gradient_descente(self,alpha=1e-6,max_iter=1e3):
-        """Runs the gradient decent algorithm
- 
-        Parameters
-        ----------
-        alpha : float
-            The learning rate for the algorithm
- 
-        max_iterations : int
-            The maximum number of iterations allowed to run before the algorithm terminates
- 
-        """
+       
         nbr_iter = 0
         vraissemblance_init = self.log_vraissemblance()
         epsilon = self.tolerance + 1
@@ -92,18 +82,7 @@ class LogisticRegression2:
         self.log_vraissemblance_gradient_descente()
  
     def predict(self,X):
-        """Computes the logistic probability of being a positive example
- 
-        Parameters
-        ----------
-        X : ndarray (n-rows,n-features)
-            Test data to score using the current weights
- 
-        Returns
-        -------
-        out : ndarray (1,)
-            Probablity of being a positive example
-        """
+       
         y = np.zeros(X.shape[0])
         proba_pred = self.probX(X)
         print(proba_pred)
